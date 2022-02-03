@@ -8,13 +8,17 @@ The code uses standard Python packages along with [[https://meep.readthedocs.io/
 
 The most important files included in this package are described briefly below.
 
-** =nanoantenna_simulator.py=
+** [[file:nanoantenna_simulator.py][nanoantenna_simulator.py]]
 
 Core Python script for running the simulation.  This can be called from the command line with an input that lets the script know where to find the appropriate settings yaml file and how to name the output files, as well as flags for controlling the simulation.
 
-** =example= folder
+** [[file:example/][example folder]]
 
 This houses an =example_settings.yaml= file that is complete and can be modified for your own simulation.  The suggested way to perform simulations would be to make directories for each set of simulations, and execute from there using a local settings file so that you can keep track of all important settings used for every simulation that you perform.
+
+** [[file:changelog-and-notes.org][changelog-and-notes.org]]
+
+A compilation of notes and changes to the program for reference.  
 
 * Installation
 
@@ -58,8 +62,4 @@ Indicates to run a background reference simulation.
 This removes the structure and runs the fields so that in post-processing the proper power transmissivities and reflectivities can be calculated, and a reference for field enhancements can be appropriately defined.  
 
 You /must/ run the simulation with this flag at least once before running the full simulation or else there will be errors in reflectivity calculation.  
-
-* [[file:changelog-and-notes.org][Changelog and Notes]]
-
-A compilation of notes and changes to the program for reference.  
 
