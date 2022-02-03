@@ -29,7 +29,7 @@ def calc_eps_r(n, k):
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
-def run_simulation(save_prefix, reference=False):
+def run_simulation(save_prefix, reference=False, visualize=False):
 
     #Open the settings yaml file
     with open(save_prefix + '_settings.yaml', 'r') as f:
@@ -41,8 +41,7 @@ def run_simulation(save_prefix, reference=False):
 
     # -- Simulation Type Toggles
     want_avgeps_on = settings['want_avgeps_on']
-    want_visualize_on = settings['want_visualize_on']
-
+    
     time_sample_rate = np.double(settings['time_sample_rate'])
     fcen = np.double(settings['fcen'])
     df = np.double(settings['df'])
@@ -67,6 +66,7 @@ def run_simulation(save_prefix, reference=False):
     #---------------------------
 
     want_structure_on = not(reference)
+    want_visualize_on = visualize
     
     substrate_material = []
     metal_material = []
@@ -256,24 +256,37 @@ def run_simulation(save_prefix, reference=False):
 #   multiple thread operation.  
 if __name__ == "__main__":
 
-    if(len(sys.argv) == 3):
+    want_visualize = False
+    want_reference = False
+    error = False
+    error_statement = ''
 
-        if(sys.argv[2] == '-b'):
+    if(len(sys.argv) > 2):
 
-            run_simulation(sys.argv[1], True)
+        for kk in range(2, len(sys.argv)):
 
-        else:
+            if(sys.argv[kk] == '-b'):
 
-            print('Input ' + sys.argv[2] + ' not valid.')
-            
+                want_reference = True
 
-    elif(len(sys.argv) == 2):
+            elif(sys.argv[kk] == '-v'):
 
-        run_simulation(sys.argv[1])
+                want_visualize = True
+
+            else:
+
+                error = True
+                error_statement = 'Argument ' + sys.argv[kk] + ' not valid.'
+
+    if error:
+
+        print(error_statement)
 
     else:
 
-        print('Only maximum of two arguments allowed!')
+        run_simulation(sys.argv[1], reference=want_reference, visualize=want_visualize)
+
+                
 
         
 

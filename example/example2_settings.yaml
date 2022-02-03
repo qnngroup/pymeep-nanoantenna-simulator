@@ -1,0 +1,24 @@
+#Simulation Type Toggles
+want_avgeps_on: True
+
+#Output settings
+time_sample_rate: 15
+fcen: 2.6923
+df: 4.6154
+nfreq: 200
+
+#Simulation Cell Settings
+dpml: 0.1
+sx: 0.32
+sy: 0.32
+sz: 1.0
+res: 300
+
+#Nanoantenna Geometry Settings
+metal_thickness: 0.02
+altitude: 0.16
+r_curvature: 0.01
+
+#Material Settings
+substrate_material_name: 'SiO2'
+metal_material_name: 'Au'
