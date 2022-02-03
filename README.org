@@ -61,5 +61,9 @@ Indicates to run a background reference simulation.
 
 This removes the structure and runs the fields so that in post-processing the proper power transmissivities and reflectivities can be calculated, and a reference for field enhancements can be appropriately defined.  
 
-You /must/ run the simulation with this flag at least once before running the full simulation or else there will be errors in reflectivity calculation.  
+You /must/ run the simulation with this flag at least once before running the full simulation or else there will be errors in reflectivity calculation.
+
+** =-v=
+
+Indicates visualization mode.  Replaces materials with numerical epsilons for visualizing the generated structure.
 
