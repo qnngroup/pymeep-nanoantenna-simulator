@@ -1,24 +1,20 @@
 * About This Code
 
-This code provides a simple 2D Smith-Purcell simulator using standard Python packages along with [[https://meep.readthedocs.io/en/latest/][MEEP for Python]].
+This code provides a 3D simulator for the interaction of ultrafast optical pulses with nanoantenna structures.  Calculations include near fields, reflectivity, and transmissivity.  The current assumption is that the antennas are laid out in a periodic array.
+
+The code uses standard Python packages along with [[https://meep.readthedocs.io/en/latest/][MEEP for Python]].  
 
 * Files
 
 The most important files included in this package are described briefly below.
 
-** =smith_purcell_simulator.py=
+** =nanoantenna_simulator.py=
 
-Core Python script for running the simulation.  This can be called from the command line with a single prefix input that lets the script know where to find the appropriate settings yaml file and how to name the output files.
-
-** =simulation-overview.ipynp=
-
-This Jupyter notebook provides an overview of the simulation routine that is the core of =smith_purcell_simulator.py=.  The intention of this notebook is to teach the user how the script works in case they want to modify it to their needs.
-
-This notebook also provides a complete description of all settings used so that the user can understand how the settings in the yaml files work.  Naming conventions are kept consistent between the settings file and Python scripts.  
+Core Python script for running the simulation.  This can be called from the command line with an input that lets the script know where to find the appropriate settings yaml file and how to name the output files, as well as flags for controlling the simulation.
 
 ** =example= folder
 
-This houses an =example_settings.yaml= file that is complete and can be modified for your own simulation.  The suggested way to perform simulations would be to make directories for each set of simulations, and execute from there using a local settings file.  
+This houses an =example_settings.yaml= file that is complete and can be modified for your own simulation.  The suggested way to perform simulations would be to make directories for each set of simulations, and execute from there using a local settings file so that you can keep track of all important settings used for every simulation that you perform.
 
 * Installation
 
@@ -37,20 +33,30 @@ MEEP install instructions can be found [[https://meep.readthedocs.io/en/latest/I
 
 * Usage
 
-Create a settings file in the working directory.  The file should be named with the convention =NAME_settings.yaml=.  You can see the =/example/example_settings.yaml= provided as a starting point, and the =simulation-overview.ipynb= notebook for a description of what the settings control.
+Create a settings file in the working directory.  The file should be named with the convention =NAME_settings.yaml=.  You can see the =/example/example_settings.yaml= provided as a starting point.  
 
 From the working directory, then call python to execute the script.  For example, with for =NAME_settings.yaml=:
 
-=python /PATH/TO/smith_purcell_simulator.py NAME=
+=python /PATH/TO/smith_purcell_simulator.py NAME FLAGS=
 
-This will run the simulation, using the prefix =NAME= prepended to all output files so you can track the simulations to the outputs.
+This will run the simulation, using the prefix =NAME= prepended to all output files so you can track the simulations to the outputs.  The FLAGS arguments are used to control how the simulation is to be run.  You need to run a background simulation first before simulating the entire structure (see the Flags section below for how to do this).  
 
 If you are running the MPI-enabled version of MEEP you can use multiple cores as follows:
 
-=mpirun -np N python /PATH/TO/smith_purcell_simulator.py NAME=
+=mpirun -np N python /PATH/TO/smith_purcell_simulator.py NAME FLAGS=
 
 where =N= is the number of cores to use.
 
-All outputs are in either =.mat= or =.h5= format.  These can be used with most standard visualization tools in MATLAB, Python, Octave, etc. 
+All outputs are in either =.mat= or =.h5= format.  These can be used with most standard visualization tools in MATLAB, Python, Octave, etc.
+
+* Flags
+
+** =-b=
+
+Indicates to run a background reference simulation.
+
+This removes the structure and runs the fields so that in post-processing the proper power transmissivities and reflectivities can be calculated, and a reference for field enhancements can be appropriately defined.  
+
+You /must/ run the simulation with this flag at least once before running the full simulation or else there will be errors in reflectivity calculation.  
 
 
