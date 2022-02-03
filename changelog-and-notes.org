@@ -1,0 +1,44 @@
+* Notebook
+** 220202 -- Translated code from Scheme
+
+*Morning to Afternoon*
+
+Completed
+-------------
+ - Completed the bulk of the transliation
+ - Happy with layout
+ - Uses yaml file for settings
+
+TODO
+------
+ - [X] Need to figure out how to handle the reference simulation with the file save_prefix.
+   - This is now automated by the run flags for visualization or reference
+   - It is selected by the user at run-time
+   - For command-line operation, you simply pass the '-b' flag for a 'background' or reference calculation.
+   - [X] Right now it is inconsistent
+   - [X] I don't want to bake the reference into the calculation as I think a skilled user could speed up the calculation by being clever with it
+
+
+ *Evening*
+
+ Now I have everything running nicely.
+
+ Had an error in the placement of the near-field monitor but that should be fixed.
+
+ Now running the code to do a final check.  Want to make sure that we can:
+
+ To Check:
+ --------------
+  - [ ] Save the flux data and plot power transmission/reflection
+  - [ ] Get the field enhancement using the old field_analysis.m script
+
+
+   
+* Tasks/Questions
+** TODO Create analysis scripts within the project in python (translate old MATLAB scripts for this)x
+*** TODO Field enhancement analysis
+*** TODO Transfer function anaysis
+*** TODO Power analysis
+** DONE Figure out how to handle reference sims with the saving routine for consistency/easy flow when using the script
+CLOSED: [2022-02-02 Wed 17:09]
+

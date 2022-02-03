@@ -1,0 +1,56 @@
+* About This Code
+
+This code provides a simple 2D Smith-Purcell simulator using standard Python packages along with [[https://meep.readthedocs.io/en/latest/][MEEP for Python]].
+
+* Files
+
+The most important files included in this package are described briefly below.
+
+** =smith_purcell_simulator.py=
+
+Core Python script for running the simulation.  This can be called from the command line with a single prefix input that lets the script know where to find the appropriate settings yaml file and how to name the output files.
+
+** =simulation-overview.ipynp=
+
+This Jupyter notebook provides an overview of the simulation routine that is the core of =smith_purcell_simulator.py=.  The intention of this notebook is to teach the user how the script works in case they want to modify it to their needs.
+
+This notebook also provides a complete description of all settings used so that the user can understand how the settings in the yaml files work.  Naming conventions are kept consistent between the settings file and Python scripts.  
+
+** =example= folder
+
+This houses an =example_settings.yaml= file that is complete and can be modified for your own simulation.  The suggested way to perform simulations would be to make directories for each set of simulations, and execute from there using a local settings file.  
+
+* Installation
+
+These scripts assume that the user has the following tools and packages installed.
+
+ 1. Python 3
+ 2. Numpy
+ 3. Scipy
+ 4. Meep
+
+The most straightforward way to run this code is to use Anaconda as the Python management package.  From there, Anaconda can be used to install Numpy, Scipy, and MEEP.
+
+Numpy and Scipy are standard packages.
+
+MEEP install instructions can be found [[https://meep.readthedocs.io/en/latest/Installation/][here]].
+
+* Usage
+
+Create a settings file in the working directory.  The file should be named with the convention =NAME_settings.yaml=.  You can see the =/example/example_settings.yaml= provided as a starting point, and the =simulation-overview.ipynb= notebook for a description of what the settings control.
+
+From the working directory, then call python to execute the script.  For example, with for =NAME_settings.yaml=:
+
+=python /PATH/TO/smith_purcell_simulator.py NAME=
+
+This will run the simulation, using the prefix =NAME= prepended to all output files so you can track the simulations to the outputs.
+
+If you are running the MPI-enabled version of MEEP you can use multiple cores as follows:
+
+=mpirun -np N python /PATH/TO/smith_purcell_simulator.py NAME=
+
+where =N= is the number of cores to use.
+
+All outputs are in either =.mat= or =.h5= format.  These can be used with most standard visualization tools in MATLAB, Python, Octave, etc. 
+
+
