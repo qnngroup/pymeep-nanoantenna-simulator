@@ -35,7 +35,7 @@ TODO
 
    
 * Tasks/Questions
-** TODO Create analysis scripts within the project in python (translate old MATLAB scripts for this)x
+** TODO Create analysis scripts within the project in python (translate old MATLAB scripts for this)
 *** TODO Field enhancement analysis
 *** TODO Transfer function anaysis
 *** TODO Power analysis

@@ -59,4 +59,7 @@ This removes the structure and runs the fields so that in post-processing the pr
 
 You /must/ run the simulation with this flag at least once before running the full simulation or else there will be errors in reflectivity calculation.  
 
+* [[file:changelog-and-notes.org][Changelog and Notes]]
+
+A compilation of notes and changes to the program for reference.  
 
