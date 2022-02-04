@@ -1,5 +1,5 @@
-function field_analysis(FOLDER, res)
-%function field_analysis(folder, res)
+function field_analysis(FOLDER, prefix, res)
+%function field_analysis(folder, prefix, res)
 %
 %Script to analyze fields of meep output.  We assume meep length
 %constant of 1 um used always. The user needs to provide the length
@@ -9,6 +9,7 @@ function field_analysis(FOLDER, res)
 %Inputs
 %--------
 % folder --> folder with meep data
+% prefix --> prefix for data file
 % res --> spatial resolution (points/um)
 %
 %Output
@@ -18,9 +19,9 @@ function field_analysis(FOLDER, res)
 %--------------------
 % Analysis Code
 %--------------------
-tip_file = [FOLDER, '/example-tEy_xy.h5'];
-bg_file = [FOLDER, '/example-bEy_xy.h5'];
-output_file = [FOLDER, '/field_data.mat'];
+tip_file = [FOLDER, '/', prefix, '-tEy_xy.h5'];
+bg_file = [FOLDER, '/', prefix, '-bEy_xy.h5'];
+output_file = [FOLDER, '/', prefix, '-field_data.mat'];
 
 c = 299792458*1e6*1e-15; %speed of light in microns/femtosecond
 S = 0.5; %Courant field factor for the simulation
