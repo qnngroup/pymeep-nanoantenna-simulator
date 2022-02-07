@@ -27,7 +27,104 @@ def calc_eps_r(n, k):
     return np.real(eps)
 
 def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
+    return v.lower() in ("yes", "true", "t", "1")
+
+def make_triangle(settings, want_visualize_on):
+    """
+    Make a triangle antenna structure.  It assumes the fill material is air.
+    It may be desired to modify this in the future.
+
+    Inputs:
+      
+      settings --> settings file passed from main code.
+      visualize --> want visualize mode
+
+    Outputs:
+
+      geometry --> meep geometry array to append to simulation geometry
+
+    Settings Need to Define:
+          
+      r_curvature --> tip radius of curvature
+      thickness --> thickness of antenna structure
+      material --> antenna structure material
+
+    """
+
+    #-- Load Settings --
+    antenna_material_name = settings['antenna_material_name']
+    antenna_thickness = np.double(settings['antenna_thickness'])
+    altitude = np.double(settings['altitude'])
+    base = np.double(settings['base'])
+    r_curvature = np.double(settings['r_curvature'])
+    fill_material_name=settings['antenna_fill_material_name']
+    fill_material_thickness=np.double(settings['antenna_fill_material_thickness'])
+
+    # -- Calculate Settings --
+    # For convenience when setting the geometry.  
+    theta = np.arctan(2*altitude/base)
+    r_top = r_curvature*np.tan(theta)
+    height_cutout = r_top*np.cos(np.pi/2.0 - theta)
+    half_base_cutout = r_top*np.sin(np.pi/2 - theta)
+    altitude_adjusted = altitude - height_cutout
+    side = np.sqrt((0.5*base - half_base_cutout)**2.0 + altitude_adjusted**2.0)
+    cutout_center_offset = half_base_cutout + np.cos(theta)*side/2.0
+
+    antenna_material=[]
+    fill_material=[]
+    
+    if want_visualize_on:
+        antenna_material=mp.Medium(epsilon=4.0)
+        fill_material=mp.Medium(epsilon=3.0)
+        
+    else:
+        
+        #Define materials from meepmat database:
+        antenna_material = eval('meepmat.' + antenna_material_name)
+
+        if(fill_material_name == 'air'):
+            fill_material=mp.Medium(epsilon=1.0)
+        else:
+            fill_material=eval('meepmat.' + fill_material_name)
+    
+    geometry = []
+
+    #Fill Material
+    geometry.append(mp.Block(center=mp.Vector3(0,0, fill_material_thickness/2.0 - antenna_thickness),
+                             size=mp.Vector3(mp.inf, mp.inf, fill_material_thickness),
+                             material=fill_material))
+    
+    #Triangle
+    geometry.append(mp.Block(center=mp.Vector3(0, 0, -1*antenna_thickness/2.0),
+                             size=mp.Vector3(base,
+                                             altitude_adjusted,
+                                             antenna_thickness),
+                             material=antenna_material))
+
+    geometry.append(mp.Block(center=mp.Vector3(base/4.0 + cutout_center_offset,
+                                               0,
+                                               -1*antenna_thickness/2.0),
+                             e2=mp.Vector3(-1*base/2.0, altitude, 0),
+                             size=mp.Vector3(base/2.0, side, antenna_thickness),
+                             material=fill_material))
+
+    geometry.append(mp.Block(center=mp.Vector3(-1*base/4.0 - cutout_center_offset,
+                                               0,
+                                               -1*antenna_thickness/2.0),
+                             e2=mp.Vector3(base/2.0, altitude, 0),
+                             size=(base/2.0, side, antenna_thickness),
+                             material=fill_material))
+
+    #Round the triangle's tip
+    geometry.append(mp.Cylinder(center=mp.Vector3(0,
+                                                  altitude_adjusted/2.0 - r_curvature*np.cos(theta),
+                                                  -1*antenna_thickness/2.0),
+                                radius=r_curvature,
+                                height=antenna_thickness,
+                                material=antenna_material))
+
+    return geometry
+    
 
 def run_simulation(save_prefix, reference=False, visualize=False):
 
@@ -53,12 +150,9 @@ def run_simulation(save_prefix, reference=False, visualize=False):
     sz = np.double(settings['sz'])
     res = np.double(settings['res'])
 
-    metal_thickness = np.double(settings['metal_thickness'])
-    altitude = np.double(settings['altitude'])
-    r_curvature = np.double(settings['r_curvature'])
+    antenna_thickness = np.double(settings['antenna_thickness'])
     
     substrate_material_name = settings['substrate_material_name']
-    metal_material_name = settings['metal_material_name']
 
 
     #---------------------------
@@ -69,21 +163,19 @@ def run_simulation(save_prefix, reference=False, visualize=False):
     want_visualize_on = visualize
     
     substrate_material = []
-    metal_material = []
 
     air = mp.Medium(epsilon=1.0)
     
     if want_visualize_on:
         substrate_material=mp.Medium(epsilon=2.0)
-        metal_material=mp.Medium(epsilon=3.0)
-
+        
+        #Change to appropriate save-prefix to differentiate:
         save_prefix = save_prefix + "-visualize"
         
     else:
             
         #Define materials from meepmat database:
         substrate_material = eval('meepmat.' + substrate_material_name)
-        metal_material = eval('meepmat.' + metal_material_name)
 
     # -- Define the Simulation Cell -- 
     #Calculate actual cell size after accounting for pmls
@@ -94,55 +186,19 @@ def run_simulation(save_prefix, reference=False, visualize=False):
 
     cell_size = mp.Vector3(sX, sY, sZ)
        
-    # Calculate convenience constants for setting the goemetry:
-    base = altitude*0.75
-    theta = np.arctan(8/3)
-    r_top = r_curvature*np.tan(theta)
-    height_cutout = r_top*np.cos(np.pi/2.0 - theta)
-    half_base_cutout = r_top*np.sin(np.pi/2 - theta)
-    altitude_adjusted = altitude - height_cutout
-    side = np.sqrt((0.5*base - half_base_cutout)**2.0 + altitude_adjusted**2.0)
-    cutout_center_offset = half_base_cutout + np.cos(theta)*side/2.0
-
     # -- Set Geometry --
     geometry = []
 
     if(want_structure_on):
 
-        #Triangle
-        geometry.append(mp.Block(center=mp.Vector3(0, 0, -1*metal_thickness/2.0),
-                                 size=mp.Vector3(base,
-                                                 altitude_adjusted,
-                                                 metal_thickness),
-                                 material=metal_material))
-
-        geometry.append(mp.Block(center=mp.Vector3(base/4.0 + cutout_center_offset,
-                                                   0,
-                                                   -1*metal_thickness/2.0),
-                                 e2=mp.Vector3(-1*base/2.0, altitude, 0),
-                                 size=mp.Vector3(base/2.0, side, metal_thickness),
-                                 material=air))
-
-        geometry.append(mp.Block(center=mp.Vector3(-1*base/4.0 - cutout_center_offset,
-                                               0,
-                                               -1*metal_thickness/2.0),
-                             e2=mp.Vector3(base/2.0, altitude, 0),
-                             size=(base/2.0, side, metal_thickness),
-                             material=air))
-
-        #Round the triangle's tip
-        geometry.append(mp.Cylinder(center=mp.Vector3(0,
-                                                  altitude_adjusted/2.0 - r_curvature*np.cos(theta),
-                                                  -1*metal_thickness/2.0),
-                                radius=r_curvature,
-                                height=metal_thickness,
-                                material=metal_material));
-
+        geometry.extend(make_triangle(settings, want_visualize_on))
+        
         #Substrate
         geometry.append(mp.Block(center=mp.Vector3(0, 0, sZ*0.25),
-                             size=mp.Vector3(mp.inf, mp.inf, sZ*0.5),
-                             material=substrate_material))
-        
+                                 size=mp.Vector3(mp.inf, mp.inf, sZ*0.5),
+                                 material=substrate_material))
+
+
 
     else:
 
@@ -161,7 +217,7 @@ def run_simulation(save_prefix, reference=False, visualize=False):
 
 
     # -- Near-Field Monitor --
-    near_field_monitor = mp.Volume(center=mp.Vector3(0, 0, -1*metal_thickness/2.0),
+    near_field_monitor = mp.Volume(center=mp.Vector3(0, 0, -1*antenna_thickness/2.0),
                                    size=mp.Vector3(sx, sy, 0))
 
 

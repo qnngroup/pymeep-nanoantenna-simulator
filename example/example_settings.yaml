@@ -16,10 +16,13 @@ sz: 1.0
 res: 300
 
 #Nanoantenna Geometry Settings
-metal_thickness: 0.02
+antenna_thickness: 0.02
 altitude: 0.24
 r_curvature: 0.01
+base: 0.18
+antenna_material_name: 'Au'
+antenna_fill_material_name: 'air'
+antenna_fill_material_thickness: 0.02
 
-#Material Settings
+#Substrate Settings
 substrate_material_name: 'SiO2'
-metal_material_name: 'Au'
