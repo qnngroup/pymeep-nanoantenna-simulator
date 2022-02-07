@@ -33,12 +33,22 @@ TODO
   - [ ] Get the field enhancement using the old field_analysis.m script
 ** 220207 -- Functionalized Function for Drawing Triangle Antenna
 
+Morning
+-----------
 I have functionalized the methods for drawing a triangle.
 
 I think we should continue to develop these functions (ones for wires, other more complicated shapes, etc).
 
 Then we can mix and match them to easily generate a complex assortment of designs for simulation.
 
+Afternoon
+-------------
+ - I have now added a new setting called "antenna_type".
+ - You specify a string value to this setting in the YAML file
+ - This then gets checked in runtime against a catologue of known antenna types
+   - If it understands it, it draws that antenna
+   - Else, it exits the program and flags an error state to the user
+     
 * Tasks/Questions
 ** TODO Create analysis scripts within the project in python (translate old MATLAB scripts for this)
 *** TODO Field enhancement analysis
