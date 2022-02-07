@@ -18,15 +18,56 @@ m =  9.10938356e-31 # electron mass in kg
 
 #Functions for calculating index of refraction -- meep style
 def calc_sig_d(n, k, fcen):
+    """
+    Calculates the conductivity used in determining the complex index of
+    refrecation in meep.  Uses typical scalar n and k values as inputs, 
+    along with the center frequency value needed for reference.
+
+    Inputs
+    --------
+      n --> real part of the complex index of refraction
+      k --> imaginary part of the complex index of refraction
+      fcen --> center frequency (in meep units).  Cycle frequency 
+               (NOT angular frequency).
+
+    Outputs
+    --------
+      sig_d --> conductivity in meep convention
+    """
     eps = (n + 1j*k)**2
     eps_r = np.real(eps)
     return 2*np.pi*fcen*np.imag(eps)/eps_r
 
 def calc_eps_r(n, k):
+    """
+    Convenience function for calculating the real part of epsilon from complex 
+    refractive index compnents.
+
+    Inputs
+    ---------
+      n --> real part of the complex index of refraction
+      k --> imaginary part of the complex index of refraction
+
+    Outputs
+    ----------
+      eps_r --> real part of epsilon
+    """
     eps = (n + 1j*k)**2
     return np.real(eps)
 
 def str2bool(v):
+    """
+    Convenience function for converting a string to boolean value.
+
+    Inputs
+    ----------
+      v --> input string
+
+    Outputs
+    ---------
+      bool_out --> boolean value (True if "yes", "true", "t" or "1, 
+                   False otherwise).
+    """
     return v.lower() in ("yes", "true", "t", "1")
 
 def make_triangle(settings, want_visualize_on):
