@@ -127,6 +127,29 @@ def make_triangle(settings, want_visualize_on):
     
 
 def run_simulation(save_prefix, reference=False, visualize=False):
+    """
+    Runs the nanoantenna simulation. 
+
+    Inputs
+    -------
+      save_prefix --> string prefix to use for loading settings and saving output files.
+      reference=False --> specify whether this run is a reference run (for background 
+                          flux calculation) or one where the antenna should be simulated.
+      visualize=False --> Is this a run purely to visualize the structure? If so, then load
+                          artificial epsilon values for each material for visualization
+                          purposes.
+
+    Output Files
+    -------------
+      save_prefix-eps_####.h5 --> epsilon data
+      save_prefix-visualize-eps####.h5 --> epsilon data for visualization of structure
+      save_prefix-tEx_xy.h5 --> Ex (or likewise Ey or Ez) data across xy plane through middle of
+                                antenna structure.
+      save_prefix-bEx_xy.h5 --> same location field data without the structure (background). 
+                                Used for transfer-function and field-enhancement calculations.
+      save_prefix_output_flux.mat --> mat file containing power flux data (transmission/reflection).
+
+    """
 
     #Open the settings yaml file
     with open(save_prefix + '_settings.yaml', 'r') as f:
