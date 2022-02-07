@@ -16,6 +16,7 @@ sz: 1.0
 res: 300
 
 #Nanoantenna Geometry Settings
+antenna_type: 'triangle'
 antenna_thickness: 0.02
 altitude: 0.24
 r_curvature: 0.01

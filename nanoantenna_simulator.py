@@ -215,6 +215,7 @@ def run_simulation(save_prefix, reference=False, visualize=False):
     res = np.double(settings['res'])
 
     antenna_thickness = np.double(settings['antenna_thickness'])
+    antenna_type = settings['antenna_type']
     
     substrate_material_name = settings['substrate_material_name']
 
@@ -255,7 +256,15 @@ def run_simulation(save_prefix, reference=False, visualize=False):
 
     if(want_structure_on):
 
-        geometry.extend(make_triangle(settings, want_visualize_on))
+        #Create the appropriate antenna type based on the user selection
+        if(antenna_type == 'triangle'):
+
+            geometry.extend(make_triangle(settings, want_visualize_on))
+
+        else:
+
+            print('\nError!!! Could not find an antenna type matching what you specified!')
+            exit()
         
         #Substrate
         geometry.append(mp.Block(center=mp.Vector3(0, 0, sZ*0.25),
