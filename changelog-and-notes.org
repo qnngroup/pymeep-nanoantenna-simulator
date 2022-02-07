@@ -31,7 +31,7 @@ TODO
  --------------
   - [ ] Save the flux data and plot power transmission/reflection
   - [ ] Get the field enhancement using the old field_analysis.m script
-** 220207 -- Functionalized Function for Drawing Triangle Antenna
+** 220207 -- Function for Drawing Triangle Antenna
 
 Morning
 -----------
