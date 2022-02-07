@@ -31,9 +31,14 @@ TODO
  --------------
   - [ ] Save the flux data and plot power transmission/reflection
   - [ ] Get the field enhancement using the old field_analysis.m script
+** 220207 -- Functionalized Function for Drawing Triangle Antenna
 
+I have functionalized the methods for drawing a triangle.
 
-   
+I think we should continue to develop these functions (ones for wires, other more complicated shapes, etc).
+
+Then we can mix and match them to easily generate a complex assortment of designs for simulation.
+
 * Tasks/Questions
 ** TODO Create analysis scripts within the project in python (translate old MATLAB scripts for this)
 *** TODO Field enhancement analysis
